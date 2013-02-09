@@ -362,6 +362,17 @@ describe "Resque::Worker" do
     assert_equal 3, @worker.processed
   end
 
+  it "runs before_reserve hooks" do
+    $BEFORE_RESERVE_CALLED = false
+    Resque.before_reserve = Proc.new { $BEFORE_RESERVE_CALLED = true }
+    workerA = Resque::Worker.new(:jobs)
+
+    assert !$BEFORE_RESERVE_CALLED
+    Resque::Job.create(:jobs, SomeJob, 20, '/tmp')
+    workerA.work(0)
+    assert $BEFORE_RESERVE_CALLED == true
+  end
+
   it "reserve blocks when the queue is empty" do
     worker = Resque::Worker.new(:timeout)
 

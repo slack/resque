@@ -183,6 +183,20 @@ module Resque
     register_hook(:after_perform, block)
   end
 
+  # The `before_reserve` hook will be run in the parent process before
+  # the job is reserved.
+  #
+  # Call with a block to register a hook.
+  # Call with no arguments to return all registered hooks.
+  def before_reserve(&block)
+    block ? register_hook(:before_reserve, block) : hooks(:before_reserve)
+  end
+
+  # Register a before_reserve proc.
+  def before_reserve=(block)
+    register_hook(:before_reserve, block)
+  end
+
   def to_s
     "Resque Client connected to #{redis_id}"
   end

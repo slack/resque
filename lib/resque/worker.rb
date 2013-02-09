@@ -208,6 +208,8 @@ module Resque
         queues.map {|queue| Queue.new(queue, Resque.redis, Resque.coder) },
         Resque.redis)
 
+      run_hook :before_reserve
+
       if interval < 1
         begin
           queue, job = multi_queue.pop(true)
