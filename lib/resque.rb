@@ -144,11 +144,13 @@ module Resque
   # Call with a block to register a hook.
   # Call with no arguments to return all registered hooks.
   def before_reserve(&block)
-    block ? (@before_reserve =  block) : @before_reserve
+    block ? register_hook(:before_reserve, block) : hooks(:before_reserve)
   end
 
-  # Set the before_fork proc
-  attr_writer :before_reserve
+  # Set the before_reserve proc
+  def before_reserve=(block)
+    register_hook(:before_reserve, block)
+  end
 
   def to_s
     "Resque Client connected to #{redis_id}"
